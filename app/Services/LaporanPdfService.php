@@ -34,6 +34,7 @@ class LaporanPdfService
         $shift->load([
             'regu',
             'supervisi',
+            'jasaSandar',
             'tripKapal' => function ($q) use ($kapalId, $dermagaId) {
                 $q->with(['kapal', 'dermaga', 'tagihPelayaran.tarif'])
                     ->when($kapalId, fn ($q) => $q->where('kapal_id', $kapalId))

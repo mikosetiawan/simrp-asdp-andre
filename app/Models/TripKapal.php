@@ -4,7 +4,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TripKapal extends Model
 {
@@ -22,3 +21,4 @@ class TripKapal extends Model
     public function tagihPelayaran(): HasOne { return $this->hasOne(TagihPelayaran::class, 'trip_id'); }
     public function manifest(): HasOne { return $this->hasOne(ManifestPenumpang::class, 'trip_id'); }
 }
+

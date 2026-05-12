@@ -30,7 +30,11 @@ class ShiftOperasional extends Model
     public function approvedBy(): BelongsTo { return $this->belongsTo(User::class, 'approved_by'); }
 
     public function tripKapal(): HasMany { return $this->hasMany(TripKapal::class, 'shift_id'); }
-    public function jasaSandar(): HasMany { return $this->hasMany(JasaSandar::class, 'shift_id'); }
+
+    public function jasaSandar(): HasMany
+    {
+        return $this->hasMany(JasaSandar::class, 'shift_id');
+    }
     public function penjualanTiket(): HasMany { return $this->hasMany(PenjualanTiket::class, 'shift_id'); }
     public function limpahanTiket(): HasMany { return $this->hasMany(LimpahanTiket::class, 'shift_id'); }
     public function asuransiShift(): HasOne { return $this->hasOne(AsuransiShift::class, 'shift_id'); }

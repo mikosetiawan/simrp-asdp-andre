@@ -36,16 +36,16 @@ class RekapitulasiService
     }
 
     /**
-     * Hitung pendapatan jasa sandar
+     * Hitung pendapatan jasa sandar (sesuai klaim RoRo: engker per call sandar, masa tambat per jumlah trip)
      */
-    public function hitungJasaSandar(int $jumlahTrip, float $tarifJsn, float $tarifEngker): array
+    public function hitungJasaSandar(int $jumlahTripJsn, int $callEngker, float $tarifJsn, float $tarifEngker): array
     {
-        $jsn    = $jumlahTrip * $tarifJsn;
-        $engker = $jumlahTrip * $tarifEngker;
+        $jsn    = $jumlahTripJsn * $tarifJsn;
+        $engker = $callEngker * $tarifEngker;
         return [
-            'pendapatan_jsn'      => $jsn,
-            'pendapatan_engker'   => $engker,
-            'total_jasa_dermaga'  => $jsn + $engker,
+            'pendapatan_jsn'      => (int) round($jsn),
+            'pendapatan_engker'   => (int) round($engker),
+            'total_jasa_dermaga'  => (int) round($jsn + $engker),
         ];
     }
 

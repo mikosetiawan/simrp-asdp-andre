@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\Operasional;
 
 use App\Http\Controllers\Controller;
-use App\Models\{ShiftOperasional, Regu, User};
+use App\Models\{ShiftOperasional, Regu, User, Dermaga};
 use Illuminate\Http\Request;
 
 class ShiftController extends Controller
@@ -60,7 +60,9 @@ class ShiftController extends Controller
             'penjualanTiket',
             'asuransiShift',
         ]);
-        return view('operasional.shift.show', compact('shift'));
+        $dermaga = Dermaga::where('aktif', true)->orderBy('kode_dermaga')->get();
+
+        return view('operasional.shift.show', compact('shift', 'dermaga'));
     }
 
     public function edit(ShiftOperasional $shift) {

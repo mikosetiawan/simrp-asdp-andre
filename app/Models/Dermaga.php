@@ -11,5 +11,6 @@ class Dermaga extends Model
     protected $casts = ['aktif' => 'boolean', 'tarif_jsn_per_trip' => 'decimal:2', 'tarif_engker_per_trip' => 'decimal:2'];
 
     public function tripKapal(): HasMany { return $this->hasMany(TripKapal::class); }
+
     public function jasaSandar(): HasMany { return $this->hasMany(JasaSandar::class); }
 }

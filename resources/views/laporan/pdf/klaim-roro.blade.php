@@ -398,10 +398,10 @@
                         <td></td>
                     </tr>
                     @foreach($engker_drgs as $drg)
-                    @php 
-                        $js = $shift->jasaSandar->firstWhere('dermaga_id', $drg->id); 
-                        $rpEnk = $js ? $js->pendapatan_engker : 0;
+                    @php
+                        $js = $shift->jasaSandar->firstWhere('dermaga_id', $drg->id);
                         $callEnk = $js ? $js->call_sandar : 0;
+                        $rpEnk = $js ? $js->pendapatan_engker : 0;
                     @endphp
                     <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;- {{ strtoupper($drg->nama_dermaga) }}</td>
@@ -430,10 +430,10 @@
                         <td></td>
                     </tr>
                     @foreach($engker_drgs as $drg)
-                    @php 
-                        $js = $shift->jasaSandar->firstWhere('dermaga_id', $drg->id); 
-                        $rpTambat = $js ? $js->pendapatan_jsn : 0;
+                    @php
+                        $js = $shift->jasaSandar->firstWhere('dermaga_id', $drg->id);
                         $callTambat = $js ? $js->jumlah_trip : 0;
+                        $rpTambat = $js ? $js->pendapatan_jsn : 0;
                     @endphp
                     <tr>
                         <td>&nbsp;&nbsp;&nbsp;&nbsp;- {{ strtoupper($drg->nama_dermaga) }}</td>

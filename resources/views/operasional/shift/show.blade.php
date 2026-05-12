@@ -93,11 +93,7 @@
                class="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-asdp-400 hover:bg-asdp-50 transition text-center">
                 <span class="text-2xl">🚢</span>
                 <span class="text-xs font-semibold text-gray-700">Trip Kapal</span>
-            </a>
-            <a href="{{ route('operasional.jasa-sandar.create', $shift) }}"
-               class="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-asdp-400 hover:bg-asdp-50 transition text-center">
-                <span class="text-2xl">⚓</span>
-                <span class="text-xs font-semibold text-gray-700">Jasa Sandar</span>
+                <span class="text-[10px] text-gray-500 leading-tight mt-0.5">Jasa sandar di Tagih01</span>
             </a>
             <a href="{{ route('operasional.penjualan-tiket.create', $shift) }}"
                class="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-asdp-400 hover:bg-asdp-50 transition text-center">
@@ -173,7 +169,13 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-center">
-                            <div class="flex items-center justify-center gap-1">
+                            <div class="flex items-center justify-center gap-1 flex-wrap">
+                                @if(!$shift->isApproved())
+                                <a href="{{ route('operasional.trip-kapal.edit', $trip) }}"
+                                   class="px-2 py-1 bg-amber-50 text-amber-900 rounded-lg text-xs font-medium hover:bg-amber-100 border border-amber-200">
+                                    Edit Trip
+                                </a>
+                                @endif
                                 @if(!$trip->tagihPelayaran)
                                 <a href="{{ route('operasional.tagih-pelayaran.create', $trip) }}"
                                    class="px-2 py-1 bg-asdp-50 text-asdp-700 rounded-lg text-xs font-medium hover:bg-asdp-100">
@@ -211,40 +213,7 @@
         </div>
     </div>
 
-    {{-- Jasa Sandar --}}
-    @if($shift->jasaSandar->count() > 0)
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-100">
-            <h3 class="font-semibold text-gray-800">⚓ Jasa Sandar Per Dermaga (TAGIH03)</h3>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b border-gray-100">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Dermaga</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Call Sandar</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Jml Trip</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Jasa Sandar</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Engker</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Total</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                    @foreach($shift->jasaSandar as $js)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-3 font-medium">{{ $js->dermaga->nama_dermaga ?? '-' }}</td>
-                        <td class="px-4 py-3 text-right">{{ $js->call_sandar }}</td>
-                        <td class="px-4 py-3 text-right">{{ $js->jumlah_trip }}</td>
-                        <td class="px-4 py-3 text-right">Rp {{ number_format($js->pendapatan_jsn, 0, ',', '.') }}</td>
-                        <td class="px-4 py-3 text-right">Rp {{ number_format($js->pendapatan_engker, 0, ',', '.') }}</td>
-                        <td class="px-4 py-3 text-right font-semibold">Rp {{ number_format($js->total_jasa_dermaga, 0, ',', '.') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @endif
+    @include('operasional.jasa-sandar._tagih03', ['shift' => $shift, 'dermaga' => $dermaga])
 
 </div>
 @endsection

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\{KapalController, DermagaController, TarifController, ReguController, PetugasController};
-use App\Http\Controllers\Operasional\{ShiftController, TripKapalController, TagihPelayaranController, JasaSandarController, PenjualanTiketController, LimpahanTiketController, ManifestController, AsuransiController};
+use App\Http\Controllers\Operasional\{ShiftController, TripKapalController, TagihPelayaranController, PenjualanTiketController, LimpahanTiketController, ManifestController, AsuransiController};
 use App\Http\Controllers\Laporan\{RekapHarianController, RekapBulananController, RekapTahunanController, KlaimRoroController, BapController};
 
 require __DIR__.'/auth.php';
@@ -38,9 +38,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get( 'tagih/{tagihPelayaran}/edit',    [TagihPelayaranController::class, 'edit'])->name('tagih-pelayaran.edit');
         Route::put( 'tagih/{tagihPelayaran}',         [TagihPelayaranController::class, 'update'])->name('tagih-pelayaran.update');
         Route::post('tagih/hitung',                   [TagihPelayaranController::class, 'hitung'])->name('tagih-pelayaran.hitung');
-
-        Route::get( 'shift/{shift}/jasa-sandar', [JasaSandarController::class, 'create'])->name('jasa-sandar.create');
-        Route::post('shift/{shift}/jasa-sandar', [JasaSandarController::class, 'store'])->name('jasa-sandar.store');
 
         Route::get( 'shift/{shift}/penjualan', [PenjualanTiketController::class, 'create'])->name('penjualan-tiket.create');
         Route::post('shift/{shift}/penjualan', [PenjualanTiketController::class, 'store'])->name('penjualan-tiket.store');

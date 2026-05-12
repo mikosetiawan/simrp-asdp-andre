@@ -86,6 +86,7 @@
                     <tr>
                         <th class="px-3 py-2 text-center text-gray-600 w-10">No</th>
                         <th class="px-3 py-2 text-left text-gray-600">Kapal</th>
+                        <th class="px-3 py-2 text-left text-gray-600 whitespace-nowrap">Dibuat</th>
                         <th class="px-3 py-2 text-left text-gray-600">Dermaga</th>
                         <th class="px-3 py-2 text-right text-gray-600">Trip</th>
                         <th class="px-3 py-2 text-right text-gray-600">EKB-D</th>
@@ -104,6 +105,10 @@
                     <tr class="hover:bg-gray-50">
                         <td class="px-3 py-2 text-center tabular-nums text-gray-600">{{ ++$klaimRowNo }}</td>
                         <td class="px-3 py-2 font-medium">{{ $trip->kapal->nama_kapal ?? '-' }}</td>
+                        <td class="px-3 py-2 whitespace-nowrap text-gray-600">
+                            @php $waktuInput = $tp?->created_at ?? $trip->created_at; @endphp
+                            {{ $waktuInput ? $waktuInput->locale('id')->isoFormat('D MMM Y HH:mm') : '-' }}
+                        </td>
                         <td class="px-3 py-2">{{ $trip->dermaga->nama_dermaga ?? '-' }}</td>
                         <td class="px-3 py-2 text-right">{{ $trip->jumlah_trip }}</td>
                         <td class="px-3 py-2 text-right">{{ $tp?->jml_pnp_ekb_d ?? '-' }}</td>

@@ -3,7 +3,7 @@
 @section('breadcrumb', 'Operasional → Shift → Tagih Pelayaran')
 
 @section('content')
-<div class="max-w-4xl mx-auto" x-data="tagihForm()" x-init="init()">
+<div class="max-w-5xl mx-auto" x-data="tagihForm()" x-init="init()">
 
     {{-- Header --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-5">
@@ -102,6 +102,8 @@
             </div>
         </div>
 
+        @include('operasional.jasa-sandar._embed_tagih03', ['dermaga' => $dermaga, 'jasaExisting' => $jasaExisting])
+
         <div class="flex items-center justify-end gap-3">
             <a href="{{ route('operasional.shift.show', $tripKapal->shift_id) }}"
                class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-50 transition">
@@ -109,7 +111,7 @@
             </a>
             <button type="submit"
                 class="px-6 py-2.5 bg-asdp-800 text-white rounded-xl text-sm font-semibold hover:bg-asdp-700 transition">
-                💾 Simpan Tagih Pelayaran
+                💾 Simpan Tagih01 &amp; Jasa Sandar (TAGIH03)
             </button>
         </div>
     </form>
