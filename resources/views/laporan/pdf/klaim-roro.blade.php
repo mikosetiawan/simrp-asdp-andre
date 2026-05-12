@@ -566,7 +566,7 @@
         <td>
             <div class="ttd-box">
                 Merak, {{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('D MMMM Y') }}<br>
-                SUPERVISI USAHA {{ strtoupper($shift->regu->nama_regu ?? '-') }}
+                SUPERVISI USAHA {{ strtoupper(($shift->regu->kode_regu ?? '').' — '.($shift->regu->nama_regu ?? '-')) }}
                 
                 <div class="ttd-name">{{ strtoupper($shift->supervisi->name ?? '________________________') }}</div>
                 <div>NIK. {{ $shift->supervisi->nik ?? '________________' }}</div>

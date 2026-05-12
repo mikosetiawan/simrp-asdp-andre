@@ -29,9 +29,20 @@ class LaporanPdfService
         return $pdf->download("rekap-tahunan-{$data['tahun']}.pdf");
     }
 
-    public function klaimRoro(ShiftOperasional $shift): \Illuminate\Http\Response
+    public function klaimRoro(ShiftOperasional $shift, ?int $kapalId = null, ?int $dermagaId = null): \Illuminate\Http\Response
     {
-        $shift->load(['regu', 'supervisi', 'tripKapal.kapal', 'tripKapal.dermaga', 'tripKapal.tagihPelayaran.tarif']);
+        $shift->load([
+            'regu',
+            'supervisi',
+            'tripKapal' => function ($q) use ($kapalId, $dermagaId) {
+                $q->with(['kapal', 'dermaga', 'tagihPelayaran.tarif'])
+                    ->when($kapalId, fn ($q) => $q->where('kapal_id', $kapalId))
+                    ->when($dermagaId, fn ($q) => $q->where('dermaga_id', $dermagaId));
+            },
+        ]);
+        if (($kapalId !== null || $dermagaId !== null) && $shift->tripKapal->isEmpty()) {
+            abort(404, 'Tidak ada trip yang sesuai filter kapal atau dermaga.');
+        }
         $pdf = Pdf::loadView('laporan.pdf.klaim-roro', compact('shift'))
                   ->setPaper('legal', 'portrait');
 
