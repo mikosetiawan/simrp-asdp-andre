@@ -149,6 +149,16 @@
                 <span class="icon">🛳️</span>
                 <span>Klaim RoRo</span>
             </a>
+            <a href="{{ route('laporan.penjualan-tiket') }}"
+               class="nav-item {{ request()->routeIs('laporan.penjualan-tiket') ? 'active' : '' }}">
+                <span class="icon">🎫</span>
+                <span>Penjualan Tiket</span>
+            </a>
+            <a href="{{ route('laporan.limpahan-tiket') }}"
+               class="nav-item {{ request()->routeIs('laporan.limpahan-tiket') ? 'active' : '' }}">
+                <span class="icon">🔄</span>
+                <span>Limpahan Tiket</span>
+            </a>
             <a href="{{ route('laporan.bap') }}"
                class="nav-item {{ request()->routeIs('laporan.bap*') ? 'active' : '' }}">
                 <span class="icon">📄</span>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\{KapalController, DermagaController, TarifController, ReguController, PetugasController};
 use App\Http\Controllers\Operasional\{ShiftController, TripKapalController, TagihPelayaranController, PenjualanTiketController, LimpahanTiketController, ManifestController, AsuransiController};
-use App\Http\Controllers\Laporan\{RekapHarianController, RekapBulananController, RekapTahunanController, KlaimRoroController, BapController};
+use App\Http\Controllers\Laporan\{RekapHarianController, RekapBulananController, RekapTahunanController, KlaimRoroController, BapController, LaporanPenjualanTiketController, LaporanLimpahanTiketController};
 
 require __DIR__.'/auth.php';
 
@@ -68,6 +68,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('klaim-roro',            [KlaimRoroController::class, 'index'])->name('klaim-roro');
         Route::get('klaim-roro/{shift}/pdf',[KlaimRoroController::class, 'exportPdf'])->name('klaim-roro.pdf');
+
+        Route::get('penjualan-tiket', [LaporanPenjualanTiketController::class, 'index'])->name('penjualan-tiket');
+        Route::get('penjualan-tiket/pdf', [LaporanPenjualanTiketController::class, 'exportPdf'])->middleware('can:laporan.export')->name('penjualan-tiket.pdf');
+
+        Route::get('limpahan-tiket', [LaporanLimpahanTiketController::class, 'index'])->name('limpahan-tiket');
+        Route::get('limpahan-tiket/pdf', [LaporanLimpahanTiketController::class, 'exportPdf'])->middleware('can:laporan.export')->name('limpahan-tiket.pdf');
 
         Route::get('bap',             [BapController::class, 'index'])->name('bap');
         Route::get('bap/{shift}/pdf', [BapController::class, 'exportPdf'])->name('bap.pdf');

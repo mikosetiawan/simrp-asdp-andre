@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\ShiftOperasional;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Collection;
 
 class LaporanPdfService
 {
@@ -61,5 +62,37 @@ class LaporanPdfService
         $pdf = Pdf::loadView('laporan.pdf.bap', compact('shift'))
                   ->setPaper('a4', 'portrait');
         return $pdf->download("bap-shift-{$shift->id}.pdf");
+    }
+
+    /**
+     * @param  Collection<int, ShiftOperasional>  $shifts
+     * @param  list<string>  $posList
+     */
+    public function penjualanTiketLaporan(Collection $shifts, string $tanggal, string $reguKeterangan, array $posList): \Illuminate\Http\Response
+    {
+        $pdf = Pdf::loadView('laporan.pdf.penjualan-tiket', compact(
+            'shifts',
+            'tanggal',
+            'reguKeterangan',
+            'posList',
+        ))->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-penjualan-tiket-' . $tanggal . '.pdf');
+    }
+
+    /**
+     * @param  Collection<int, ShiftOperasional>  $shifts
+     * @param  list<string>  $jenisTiket
+     */
+    public function limpahanTiketLaporan(Collection $shifts, string $tanggal, string $reguKeterangan, array $jenisTiket): \Illuminate\Http\Response
+    {
+        $pdf = Pdf::loadView('laporan.pdf.limpahan-tiket', compact(
+            'shifts',
+            'tanggal',
+            'reguKeterangan',
+            'jenisTiket',
+        ))->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-limpahan-tiket-' . $tanggal . '.pdf');
     }
 }
