@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') — SIMRP ASDP Merak</title>
+    <title>@yield('title', 'Dashboard') — RANCANG BANGUN SISTEM INFORMASI MANAJEMEN REKAPITULASI PENJUALAN TIKET KAPAL FERRY PADA PT. ASDP Indonesia Ferry — Cabang Utama Merak</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -91,18 +91,19 @@
 
     {{-- ══ SIDEBAR ══ --}}
     <aside
-        class="fixed inset-y-0 left-0 z-30 w-[232px] flex flex-col lg:static lg:z-auto transition-transform duration-200"
+        class="fixed inset-y-0 left-0 z-30 w-[240px] flex flex-col lg:static lg:z-auto transition-transform duration-200"
         :class="open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
         style="background: linear-gradient(160deg, #0d2570 0%, #163591 55%, #1e44a8 100%);">
 
         {{-- Logo --}}
-        <div class="flex items-center gap-3 px-5 py-[18px] border-b border-white/10 flex-shrink-0">
+        <div class="flex items-center gap-3 px-4 py-4 border-b border-white/10 flex-shrink-0">
             <div class="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-white/10 rounded-xl p-1">
                 <img src="{{ asset('images/asdp-ferry.png') }}" alt="ASDP Logo" class="w-full h-full object-contain filter drop-shadow-md">
             </div>
-            <div>
-                <div class="text-white font-bold text-[13px] leading-tight tracking-wide">SIMRP ASDP</div>
-                <div class="text-white/50 text-[11px] mt-0.5">Cabang Utama Merak</div>
+            <div class="min-w-0">
+                <div class="text-white font-bold text-[11.5px] leading-tight tracking-wide truncate" title="SIM Rekap Penjualan Tiket Ferry">SIM REKAP TIKET FERRY</div>
+                <div class="text-white/70 text-[8.5px] mt-0.5 leading-tight truncate">SI Rekapitulasi Penjualan Tiket Kapal Ferry</div>
+                <div class="text-white/40 text-[8px] leading-tight truncate">PT. ASDP Indonesia Ferry — Cabang Utama Merak</div>
             </div>
         </div>
 

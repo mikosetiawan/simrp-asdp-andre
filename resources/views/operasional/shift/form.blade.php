@@ -118,3 +118,65 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const namaShiftSelect = document.querySelector('select[name="nama_shift"]');
+    const jamMulaiInput = document.querySelector('input[name="jam_mulai"]');
+    const jamSelesaiInput = document.querySelector('input[name="jam_selesai"]');
+    const tanggalInput = document.querySelector('input[name="tanggal"]');
+    const tglAwalInput = document.querySelector('input[name="tanggal_awal_dinas"]');
+    const tglAkhirInput = document.querySelector('input[name="tanggal_akhir_dinas"]');
+
+    function updateTimesAndDates() {
+        if (!namaShiftSelect || !tanggalInput) return;
+        const shiftVal = namaShiftSelect.value;
+        const baseDateVal = tanggalInput.value;
+
+        if (!baseDateVal) return;
+
+        if (tglAwalInput) tglAwalInput.value = baseDateVal;
+
+        const baseDate = new Date(baseDateVal + 'T00:00:00');
+
+        if (shiftVal === 'Pagi') {
+            if (jamMulaiInput) jamMulaiInput.value = '08:00';
+            if (jamSelesaiInput) jamSelesaiInput.value = '20:00';
+            if (tglAkhirInput) tglAkhirInput.value = baseDateVal;
+        } else if (shiftVal === 'Malam') {
+            if (jamMulaiInput) jamMulaiInput.value = '20:00';
+            if (jamSelesaiInput) jamSelesaiInput.value = '08:00';
+            const nextDate = new Date(baseDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const yyyy = nextDate.getFullYear();
+            const mm = String(nextDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(nextDate.getDate()).padStart(2, '0');
+            if (tglAkhirInput) tglAkhirInput.value = `${yyyy}-${mm}-${dd}`;
+        } else if (shiftVal === 'Siang') {
+            if (jamMulaiInput) jamMulaiInput.value = '15:00';
+            if (jamSelesaiInput) jamSelesaiInput.value = '23:00';
+            if (tglAkhirInput) tglAkhirInput.value = baseDateVal;
+        } else if (shiftVal === 'Full Day') {
+            if (jamMulaiInput) jamMulaiInput.value = '08:00';
+            if (jamSelesaiInput) jamSelesaiInput.value = '08:00';
+            const nextDate = new Date(baseDate);
+            nextDate.setDate(nextDate.getDate() + 1);
+            const yyyy = nextDate.getFullYear();
+            const mm = String(nextDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(nextDate.getDate()).padStart(2, '0');
+            if (tglAkhirInput) tglAkhirInput.value = `${yyyy}-${mm}-${dd}`;
+        }
+    }
+
+    if (namaShiftSelect && tanggalInput) {
+        namaShiftSelect.addEventListener('change', updateTimesAndDates);
+        tanggalInput.addEventListener('change', updateTimesAndDates);
+
+        @if($mode === 'create')
+            updateTimesAndDates();
+        @endif
+    }
+});
+</script>
+@endpush

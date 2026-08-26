@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — SIMRP ASDP Merak</title>
+<title>RANCANG BANGUN SISTEM INFORMASI MANAJEMEN REKAPITULASI PENJUALAN TIKET KAPAL FERRY PADA PT. ASDP Indonesia Ferry — Cabang Utama Merak</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { asdp: { 800:'#003087',700:'#1a4d9a',600:'#2c5fab' } } } } }</script>
@@ -16,9 +16,8 @@
         <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl shadow-lg mb-4 p-2">
             <img src="{{ asset('images/asdp-ferry.png') }}" alt="ASDP Logo" class="w-full h-full object-contain">
         </div>
-        <h1 class="text-white font-bold text-2xl">SIMRP ASDP Merak</h1>
-        <p class="text-blue-200 text-sm mt-1">Sistem Informasi Manajemen Rekapitulasi Pendapatan</p>
-        <p class="text-blue-300 text-xs mt-0.5">PT. ASDP Indonesia Ferry — Cabang Utama Merak</p>
+        <h1 class="text-white font-bold text-lg leading-snug uppercase tracking-wide px-2">Rancang Bangun Sistem Informasi Manajemen Rekapitulasi Penjualan Tiket Kapal Ferry</h1>
+        <p class="text-blue-200 text-xs font-medium mt-1.5">PT. ASDP Indonesia Ferry — Cabang Utama Merak</p>
     </div>
 
     {{-- Login Form --}}

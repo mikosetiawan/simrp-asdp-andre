@@ -31,8 +31,13 @@
                     <select name="kapal_id" class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500 @error('kapal_id') border-red-400 @enderror">
                         <option value="">-- Pilih Kapal --</option>
                         @foreach($kapal as $k)
-                        <option value="{{ $k->id }}" {{ (int) old('kapal_id', $isEdit ? $tripKapal->kapal_id : null) === (int) $k->id ? 'selected' : '' }}>
+                        <option value="{{ $k->id }}"
+                                data-existing-trips="{{ $tripCounts[$k->id] ?? 0 }}"
+                                {{ (int) old('kapal_id', $isEdit ? $tripKapal->kapal_id : null) === (int) $k->id ? 'selected' : '' }}>
                             {{ $k->nama_kapal }} ({{ number_format($k->grt) }} GRT)
+                            @if(isset($tripCounts[$k->id]) && $tripCounts[$k->id] > 0)
+                                [Sudah {{ $tripCounts[$k->id] }} trip]
+                            @endif
                         </option>
                         @endforeach
                     </select>
@@ -79,13 +84,13 @@
                         class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Jam Berangkat</label>
-                    <input type="time" name="jam_berangkat" value="{{ old('jam_berangkat', $isEdit && $tripKapal->jam_berangkat ? substr($tripKapal->jam_berangkat, 0, 5) : '') }}"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jam Tiba</label>
+                    <input type="time" name="jam_tiba" value="{{ old('jam_tiba', $isEdit && $tripKapal->jam_tiba ? substr($tripKapal->jam_tiba, 0, 5) : '') }}"
                         class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Jam Tiba</label>
-                    <input type="time" name="jam_tiba" value="{{ old('jam_tiba', $isEdit && $tripKapal->jam_tiba ? substr($tripKapal->jam_tiba, 0, 5) : '') }}"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jam Berangkat</label>
+                    <input type="time" name="jam_berangkat" value="{{ old('jam_berangkat', $isEdit && $tripKapal->jam_berangkat ? substr($tripKapal->jam_berangkat, 0, 5) : '') }}"
                         class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
                 </div>
             </div>
@@ -117,3 +122,24 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const kapalSelect = document.querySelector('select[name="kapal_id"]');
+    const jumlahTripInput = document.querySelector('input[name="jumlah_trip"]');
+    const tripKeInput = document.querySelector('input[name="trip_ke"]');
+    const isEdit = {{ $isEdit ? 'true' : 'false' }};
+
+    if (kapalSelect && !isEdit) {
+        kapalSelect.addEventListener('change', function () {
+            const selectedOpt = kapalSelect.options[kapalSelect.selectedIndex];
+            const existing = parseInt(selectedOpt.getAttribute('data-existing-trips') || '0', 10);
+            const nextTrip = existing + 1;
+            if (jumlahTripInput) jumlahTripInput.value = nextTrip;
+            if (tripKeInput) tripKeInput.value = nextTrip;
+        });
+    }
+});
+</script>
+@endpush

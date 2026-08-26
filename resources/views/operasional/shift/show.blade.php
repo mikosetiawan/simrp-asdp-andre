@@ -124,81 +124,112 @@
     </div>
     @endif
 
-    {{-- Trip Kapal Table --}}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-            <h3 class="font-semibold text-gray-800">🚢 Data Trip Kapal (Tagih01)</h3>
+    {{-- Excel Master Table View --}}
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden font-sans">
+        {{-- Excel Ribbon Header --}}
+        <div class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 px-5 py-3 text-white flex items-center justify-between border-b border-emerald-900">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center font-bold text-sm border border-white/20">
+                    📊
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm tracking-wide flex items-center gap-2">
+                        MASTER EXCEL — DATA TRIP & PENDAPATAN KAPAL (TAGIH01)
+                    </h3>
+                    <p class="text-[11px] text-emerald-150 text-white/80">Lembar Kerja Rekapitulasi Operasional Shift ASDP Merak</p>
+                </div>
+            </div>
             @if(!$shift->isApproved())
             <a href="{{ route('operasional.trip-kapal.create', $shift) }}"
-               class="text-sm text-asdp-700 font-medium hover:underline">+ Tambah Trip</a>
+               class="px-3.5 py-1.5 bg-white text-emerald-900 hover:bg-emerald-50 font-semibold text-xs rounded-lg shadow-sm transition flex items-center gap-1.5">
+                <span>➕</span> Input Trip Kapal Baru
+            </a>
             @endif
         </div>
+
+        {{-- Excel Spreadsheet Table --}}
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b border-gray-100">
-                    <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">No</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Kapal</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Dermaga</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Trip</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Penumpang</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Kendaraan</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Pendapatan</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Aksi</th>
+            <table class="w-full text-xs text-slate-800 border-collapse border border-slate-300">
+                <thead class="bg-slate-100 text-slate-700 font-semibold uppercase tracking-wider border-b-2 border-slate-300">
+                    <tr class="divide-x divide-slate-300 text-center">
+                        <th class="px-2 py-2 w-10 bg-slate-200 border border-slate-300">NO</th>
+                        <th class="px-3 py-2 border border-slate-300 text-left">NAMA KAPAL</th>
+                        <th class="px-3 py-2 border border-slate-300 text-left">DERMAGA</th>
+                        <th class="px-2 py-2 border border-slate-300 w-20">JAM TIBA</th>
+                        <th class="px-2 py-2 border border-slate-300 w-24">JAM BERANGKAT</th>
+                        <th class="px-2 py-2 border border-slate-300 w-16">TRIP KE</th>
+                        <th class="px-2 py-2 border border-slate-300 w-16">JML TRIP</th>
+                        <th class="px-3 py-2 border border-slate-300 text-right">PENUMPANG</th>
+                        <th class="px-3 py-2 border border-slate-300 text-right">KENDARAAN</th>
+                        <th class="px-3 py-2 border border-slate-300 text-right bg-emerald-50">TOTAL PENDAPATAN</th>
+                        <th class="px-3 py-2 border border-slate-300 text-center">AKSI / OPSI</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-slate-200 bg-white">
                     @forelse($shift->tripKapal as $trip)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-3 text-gray-500">{{ $loop->iteration }}</td>
-                        <td class="px-4 py-3 font-medium text-gray-800">
+                    <tr class="hover:bg-amber-50/60 divide-x divide-slate-200 transition">
+                        <td class="px-2 py-2 text-center text-slate-500 font-mono bg-slate-50 border border-slate-200">{{ $loop->iteration }}</td>
+                        <td class="px-3 py-2 font-bold text-slate-800 border border-slate-200">
                             {{ $trip->kapal->nama_kapal ?? '-' }}
                             @if($trip->kapalPengganti)
-                            <span class="text-xs text-orange-600 ml-1">(Pgn: {{ $trip->kapalPengganti->nama_kapal }})</span>
+                            <span class="inline-block text-[10px] bg-orange-100 text-orange-800 px-1.5 py-0.5 rounded font-normal ml-1">
+                                Pgn: {{ $trip->kapalPengganti->nama_kapal }}
+                            </span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-gray-600">{{ $trip->dermaga->nama_dermaga ?? '-' }}</td>
-                        <td class="px-4 py-3 text-right font-medium">{{ $trip->jumlah_trip }}</td>
-                        <td class="px-4 py-3 text-right">{{ number_format($trip->tagihPelayaran?->total_penumpang ?? 0) }}</td>
-                        <td class="px-4 py-3 text-right">{{ number_format($trip->tagihPelayaran?->total_kendaraan ?? 0) }}</td>
-                        <td class="px-4 py-3 text-right font-semibold">
+                        <td class="px-3 py-2 text-slate-600 border border-slate-200">{{ $trip->dermaga->nama_dermaga ?? '-' }}</td>
+                        <td class="px-2 py-2 text-center font-mono text-slate-700 border border-slate-200">
+                            {{ $trip->jam_tiba ? substr($trip->jam_tiba, 0, 5) : '-' }}
+                        </td>
+                        <td class="px-2 py-2 text-center font-mono text-slate-700 border border-slate-200">
+                            {{ $trip->jam_berangkat ? substr($trip->jam_berangkat, 0, 5) : '-' }}
+                        </td>
+                        <td class="px-2 py-2 text-center font-semibold text-slate-700 border border-slate-200">{{ $trip->trip_ke }}</td>
+                        <td class="px-2 py-2 text-center font-semibold text-slate-700 border border-slate-200">{{ $trip->jumlah_trip }}</td>
+                        <td class="px-3 py-2 text-right font-mono border border-slate-200">
+                            {{ number_format($trip->tagihPelayaran?->total_penumpang ?? 0) }}
+                        </td>
+                        <td class="px-3 py-2 text-right font-mono border border-slate-200">
+                            {{ number_format($trip->tagihPelayaran?->total_kendaraan ?? 0) }}
+                        </td>
+                        <td class="px-3 py-2 text-right font-mono font-bold border border-slate-200 {{ $trip->tagihPelayaran ? 'text-emerald-800 bg-emerald-50/50' : 'text-amber-600 bg-amber-50/40' }}">
                             @if($trip->tagihPelayaran)
                                 Rp {{ number_format($trip->tagihPelayaran->total_pendapatan, 0, ',', '.') }}
                             @else
-                                <span class="text-orange-500 text-xs">Belum diinput</span>
+                                <span class="italic text-[10px]">⚠️ Belum diinput</span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-center">
+                        <td class="px-3 py-2 text-center border border-slate-200">
                             <div class="flex items-center justify-center gap-1 flex-wrap">
                                 @if(!$shift->isApproved())
                                 <a href="{{ route('operasional.trip-kapal.edit', $trip) }}"
-                                   class="px-2 py-1 bg-amber-50 text-amber-900 rounded-lg text-xs font-medium hover:bg-amber-100 border border-amber-200">
-                                    Edit Trip
+                                   class="px-2 py-1 bg-slate-100 text-slate-700 rounded hover:bg-slate-200 border border-slate-300 font-medium text-[11px]">
+                                    ✏️ Edit
                                 </a>
                                 @endif
                                 @if(!$trip->tagihPelayaran)
                                 <a href="{{ route('operasional.tagih-pelayaran.create', $trip) }}"
-                                   class="px-2 py-1 bg-asdp-50 text-asdp-700 rounded-lg text-xs font-medium hover:bg-asdp-100">
-                                    Input Tagih
+                                   class="px-2 py-1 bg-emerald-600 text-white rounded hover:bg-emerald-700 font-semibold text-[11px] shadow-sm">
+                                    📝 Input Tagih
                                 </a>
                                 @else
                                 <a href="{{ route('operasional.tagih-pelayaran.edit', $trip->tagihPelayaran) }}"
-                                   class="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium hover:bg-blue-100">
-                                    Edit Tagih
+                                   class="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded hover:bg-blue-100 font-medium text-[11px]">
+                                    ✏️ Edit Tagih
                                 </a>
                                 @endif
                                 @if(!$trip->manifest)
                                 <a href="{{ route('operasional.manifest.create', $trip) }}"
-                                   class="px-2 py-1 bg-gray-50 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-100">
-                                    Manifest
+                                   class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 rounded hover:bg-purple-100 font-medium text-[11px]">
+                                    📋 Manifest
                                 </a>
                                 @endif
                                 @if(!$shift->isApproved())
                                 <form method="POST" action="{{ route('operasional.trip-kapal.destroy', $trip) }}" class="inline"
-                                    onsubmit="return confirm('Hapus trip ini?')">
+                                    onsubmit="return confirm('Hapus data trip kapal ini?')">
                                     @csrf @method('DELETE')
-                                    <button class="p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    <button class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition" title="Hapus">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </button>
                                 </form>
                                 @endif
@@ -206,9 +237,27 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="8" class="px-4 py-8 text-center text-gray-400 text-sm">Belum ada data trip kapal</td></tr>
+                    <tr>
+                        <td colspan="11" class="px-4 py-8 text-center text-slate-400 italic bg-slate-50 border border-slate-200">
+                            Belum ada data trip kapal pada shift ini. Klik "+ Input Trip Kapal Baru" untuk mulai pengisian.
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
+                @if($shift->tripKapal->count() > 0)
+                <tfoot class="bg-slate-800 text-white font-bold divide-x divide-slate-700 border-t-2 border-slate-900">
+                    <tr>
+                        <td colspan="6" class="px-3 py-2.5 text-right uppercase tracking-wider text-[11px] text-slate-300">TOTAL REKAPITULASI SHIFT:</td>
+                        <td class="px-2 py-2.5 text-center font-mono bg-slate-900 text-emerald-400">{{ $totalTrip }}</td>
+                        <td class="px-3 py-2.5 text-right font-mono">{{ number_format($totalPnp) }}</td>
+                        <td class="px-3 py-2.5 text-right font-mono">{{ number_format($totalKnd) }}</td>
+                        <td class="px-3 py-2.5 text-right font-mono text-emerald-300 text-xs bg-emerald-950/60">
+                            Rp {{ number_format($totalPend, 0, ',', '.') }}
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+                @endif
             </table>
         </div>
     </div>

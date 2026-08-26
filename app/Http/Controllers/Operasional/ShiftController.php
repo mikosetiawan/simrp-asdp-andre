@@ -47,6 +47,12 @@ class ShiftController extends Controller
             'tanggal_akhir_dinas' => 'nullable|date|after_or_equal:tanggal_awal_dinas',
             'catatan'             => 'nullable|string',
         ]);
+        $v['tanggal_awal_dinas'] = $v['tanggal_awal_dinas'] ?? $v['tanggal'];
+        if ($v['nama_shift'] === 'Malam' && empty($v['tanggal_akhir_dinas'])) {
+            $v['tanggal_akhir_dinas'] = \Carbon\Carbon::parse($v['tanggal'])->addDay()->format('Y-m-d');
+        } elseif (empty($v['tanggal_akhir_dinas'])) {
+            $v['tanggal_akhir_dinas'] = $v['tanggal'];
+        }
         $v['status'] = 'draft';
         $shift = ShiftOperasional::create($v);
         return redirect()->route('operasional.shift.show', $shift)->with('success', 'Shift berhasil dibuat.');
@@ -87,6 +93,12 @@ class ShiftController extends Controller
             'tanggal_akhir_dinas' => 'nullable|date|after_or_equal:tanggal_awal_dinas',
             'catatan'             => 'nullable|string',
         ]);
+        $v['tanggal_awal_dinas'] = $v['tanggal_awal_dinas'] ?? $v['tanggal'];
+        if ($v['nama_shift'] === 'Malam' && empty($v['tanggal_akhir_dinas'])) {
+            $v['tanggal_akhir_dinas'] = \Carbon\Carbon::parse($v['tanggal'])->addDay()->format('Y-m-d');
+        } elseif (empty($v['tanggal_akhir_dinas'])) {
+            $v['tanggal_akhir_dinas'] = $v['tanggal'];
+        }
         $shift->update($v);
         return redirect()->route('operasional.shift.show', $shift)->with('success', 'Shift berhasil diperbarui.');
     }
