@@ -101,9 +101,12 @@
                 <img src="{{ asset('images/asdp-ferry.png') }}" alt="ASDP Logo" class="w-full h-full object-contain filter drop-shadow-md">
             </div>
             <div class="min-w-0">
-                <div class="text-white font-bold text-[11.5px] leading-tight tracking-wide truncate" title="SIM Rekap Penjualan Tiket Ferry">SIM REKAP TIKET FERRY</div>
-                <div class="text-white/70 text-[8.5px] mt-0.5 leading-tight truncate">SI Rekapitulasi Penjualan Tiket Kapal Ferry</div>
-                <div class="text-white/40 text-[8px] leading-tight truncate">PT. ASDP Indonesia Ferry — Cabang Utama Merak</div>
+                <div class="text-white font-bold text-[11px] leading-snug tracking-wide uppercase" title="Rancang Bangun Sistem Informasi Manajemen Rekapitulasi Penjualan Tiket Kapal Ferry — PT. ASDP Indonesia Ferry Cabang Utama Merak">
+                    RANCANG BANGUN SIMRP TIKET FERRY CAB.MERAK
+                </div>
+                <div class="text-white/50 text-[8.5px] mt-0.5 leading-tight truncate">
+                    PT. ASDP Indonesia Ferry — Cabang Utama Merak
+                </div>
             </div>
         </div>
 
