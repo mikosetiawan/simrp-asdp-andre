@@ -26,6 +26,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('shift', ShiftController::class);
         Route::post('shift/{shift}/submit',  [ShiftController::class, 'submit'])->name('shift.submit');
         Route::post('shift/{shift}/approve', [ShiftController::class, 'approve'])->name('shift.approve');
+        Route::get( 'shift/{shift}/jasa-sandar', [ShiftController::class, 'jasaSandar'])->name('shift.jasa-sandar');
 
         Route::get( 'shift/{shift}/trip/create', [TripKapalController::class, 'create'])->name('trip-kapal.create');
         Route::post('shift/{shift}/trip',         [TripKapalController::class, 'store'])->name('trip-kapal.store');

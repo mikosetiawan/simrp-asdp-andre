@@ -121,6 +121,12 @@ class ShiftController extends Controller
         return back()->with('success', 'Shift berhasil disetujui.');
     }
 
+    public function jasaSandar(ShiftOperasional $shift) {
+        $shift->load(['regu', 'supervisi', 'jasaSandar.dermaga']);
+        $dermaga = Dermaga::where('aktif', true)->orderBy('kode_dermaga')->get();
+        return view('operasional.jasa-sandar.show', compact('shift', 'dermaga'));
+    }
+
     /**
      * Query users berdasarkan nama role — aman tanpa guard issue.
      */

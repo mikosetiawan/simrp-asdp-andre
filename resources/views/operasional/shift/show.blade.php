@@ -120,6 +120,12 @@
                 <span class="text-2xl">📋</span>
                 <span class="text-xs font-semibold text-gray-700">Cetak BAP</span>
             </a>
+            <a href="{{ route('operasional.shift.jasa-sandar', $shift) }}"
+               class="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-asdp-400 hover:bg-asdp-50 transition text-center">
+                <span class="text-2xl">⚓</span>
+                <span class="text-xs font-semibold text-gray-700">Lihat Jasa Sandar & Tambat</span>
+                <span class="text-[10px] text-gray-500 leading-tight mt-0.5">Engker & Masa Tambat (TAGIH03)</span>
+            </a>
         </div>
     </div>
     @endif
@@ -255,8 +261,6 @@
             </table>
         </div>
     </div>
-
-    @include('operasional.jasa-sandar._tagih03', ['shift' => $shift, 'dermaga' => $dermaga])
 
 </div>
 @endsection
