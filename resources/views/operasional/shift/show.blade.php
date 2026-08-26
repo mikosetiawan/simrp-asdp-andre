@@ -218,12 +218,6 @@
                                     ✏️ Edit Tagih
                                 </a>
                                 @endif
-                                @if(!$trip->manifest)
-                                <a href="{{ route('operasional.manifest.create', $trip) }}"
-                                   class="px-2 py-1 bg-purple-50 text-purple-700 border border-purple-200 rounded hover:bg-purple-100 font-medium text-[11px]">
-                                    📋 Manifest
-                                </a>
-                                @endif
                                 @if(!$shift->isApproved())
                                 <form method="POST" action="{{ route('operasional.trip-kapal.destroy', $trip) }}" class="inline"
                                     onsubmit="return confirm('Hapus data trip kapal ini?')">
