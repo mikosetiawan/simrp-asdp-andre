@@ -158,8 +158,11 @@
     $jam_b = $trip ? substr($trip->jam_berangkat, 0, 5) : '00:00';
     $nama_dermaga = $trip ? ($trip->dermaga->nama_dermaga ?? '-') : '-';
 
-    // Calculate waktu sandar
+    // Calculate waktu sandar & kelebihan jadwal (Punishment > 80 Menit)
     $waktu_sandar = '-';
+    $kelebihan_jadwal = '00:00';
+    $is_punishment = false;
+
     if ($trip && $trip->jam_tiba && $trip->jam_berangkat) {
         try {
             $t1 = \Carbon\Carbon::createFromFormat('H:i:s', strlen($trip->jam_tiba) === 5 ? $trip->jam_tiba.':00' : $trip->jam_tiba);
@@ -167,8 +170,17 @@
             if ($t2->lt($t1)) $t2->addDay();
             $diffMins = $t1->diffInMinutes($t2);
             $waktu_sandar = sprintf('%02d:%02d', floor($diffMins / 60), $diffMins % 60);
+
+            if ($diffMins > 80) {
+                $is_punishment = true;
+                $overMins = $diffMins - 80;
+                $kelebihan_jadwal = sprintf('%02d:%02d', floor($overMins / 60), $overMins % 60);
+            } else {
+                $kelebihan_jadwal = '00:00';
+            }
         } catch (\Exception $e) {
             $waktu_sandar = '-';
+            $kelebihan_jadwal = '00:00';
         }
     }
 @endphp
@@ -401,7 +413,12 @@
                     <tr>
                         <td>00:00</td>
                         <td>01:20</td>
-                        <td>-</td>
+                        <td style="{{ $is_punishment ? 'color: #b91c1c; font-weight: bold;' : '' }}">
+                            {{ $kelebihan_jadwal }}
+                            @if($is_punishment)
+                                <br><span style="font-size:7px; color:#b91c1c; font-weight:bold;">(PUNISHMENT)</span>
+                            @endif
+                        </td>
                     </tr>
                 </table>
             </td>

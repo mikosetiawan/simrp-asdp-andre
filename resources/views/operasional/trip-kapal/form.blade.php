@@ -119,13 +119,36 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Jam Tiba (Kedatangan)</label>
-                        <input type="time" name="jam_tiba" value="{{ old('jam_tiba', $isEdit && $tripKapal->jam_tiba ? substr($tripKapal->jam_tiba, 0, 5) : '') }}"
+                        <input type="time" name="jam_tiba" @change="updateWaktuSandar()" @input="updateWaktuSandar()" x-ref="jamTiba"
+                            value="{{ old('jam_tiba', $isEdit && $tripKapal->jam_tiba ? substr($tripKapal->jam_tiba, 0, 5) : '') }}"
                             class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Jam Berangkat (Keberangkatan)</label>
-                        <input type="time" name="jam_berangkat" value="{{ old('jam_berangkat', $isEdit && $tripKapal->jam_berangkat ? substr($tripKapal->jam_berangkat, 0, 5) : '') }}"
+                        <input type="time" name="jam_berangkat" @change="updateWaktuSandar()" @input="updateWaktuSandar()" x-ref="jamBerangkat"
+                            value="{{ old('jam_berangkat', $isEdit && $tripKapal->jam_berangkat ? substr($tripKapal->jam_berangkat, 0, 5) : '') }}"
                             class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
+                    </div>
+                </div>
+
+                {{-- Banner Indikator Waktu Sandar & Punishment (>80 Menit) --}}
+                <div class="p-4 rounded-xl border transition shadow-xs"
+                     :class="isPunishment ? 'bg-rose-50 border-rose-300 text-rose-900' : 'bg-slate-50 border-slate-200 text-slate-700'">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                        <div class="space-y-0.5">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold">⏱️ Waktu Sandar:</span>
+                                <span class="font-mono font-bold text-sm" x-text="waktuSandarText">-</span>
+                            </div>
+                            <div class="text-[11px] text-slate-500">Standar Waktu Sandar Maksimal: <strong>80 Menit (01:20 WIB)</strong></div>
+                        </div>
+                        <div class="w-full sm:w-auto">
+                            <div class="font-bold font-mono text-xs px-3 py-1.5 rounded-lg border text-center flex items-center justify-center gap-1.5"
+                                 :class="isPunishment ? 'text-rose-700 bg-rose-100 border-rose-300' : 'text-emerald-700 bg-emerald-100 border-emerald-300'">
+                                <span x-text="isPunishment ? '⚠️ KELEBIHAN JADWAL & PUNISHMENT:' : '✅ STATUS JADWAL:'"></span>
+                                <span x-text="kelebihanText">00:00 (Normal)</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -250,8 +273,12 @@ function unifiedTripForm() {
         gol_viii: {{ old('gol_viii', $tagih->gol_viii ?? 0) }},
         gol_ix: {{ old('gol_ix', $tagih->gol_ix ?? 0) }},
         pendapatanPnp: 0, pendapatanKnd: 0, totalPendapatan: 0, totalPnp: 0, totalKnd: 0,
+        durasiSandarMenit: 0, waktuSandarText: '-', kelebihanMenit: 0, kelebihanText: '00:00 (Normal)', isPunishment: false,
 
-        init() { this.hitung(); },
+        init() {
+            this.hitung();
+            this.updateWaktuSandar();
+        },
 
         onKapalChange(e) {
             if (this.isEdit) return;
@@ -261,6 +288,43 @@ function unifiedTripForm() {
             const nextTrip = existing + 1;
             if (this.$refs.jumlahTrip) this.$refs.jumlahTrip.value = nextTrip;
             if (this.$refs.tripKe) this.$refs.tripKe.value = nextTrip;
+        },
+
+        updateWaktuSandar() {
+            const tiba = this.$refs.jamTiba ? this.$refs.jamTiba.value : '';
+            const berangkat = this.$refs.jamBerangkat ? this.$refs.jamBerangkat.value : '';
+            if (!tiba || !berangkat) {
+                this.waktuSandarText = '-';
+                this.kelebihanText = '00:00 (Normal)';
+                this.isPunishment = false;
+                return;
+            }
+
+            const [h1, m1] = tiba.split(':').map(Number);
+            const [h2, m2] = berangkat.split(':').map(Number);
+
+            let t1 = h1 * 60 + m1;
+            let t2 = h2 * 60 + m2;
+            if (t2 < t1) t2 += 24 * 60; // Cross midnight
+
+            const diff = t2 - t1;
+            this.durasiSandarMenit = diff;
+
+            const jam = Math.floor(diff / 60);
+            const min = diff % 60;
+            this.waktuSandarText = `${String(jam).padStart(2, '0')}:${String(min).padStart(2, '0')} (${diff} Menit)`;
+
+            if (diff > 80) {
+                this.kelebihanMenit = diff - 80;
+                this.isPunishment = true;
+                const kj = Math.floor(this.kelebihanMenit / 60);
+                const km = this.kelebihanMenit % 60;
+                this.kelebihanText = `${String(kj).padStart(2, '0')}:${String(km).padStart(2, '0')} (Punishment ${this.kelebihanMenit} mnt)`;
+            } else {
+                this.kelebihanMenit = 0;
+                this.isPunishment = false;
+                this.kelebihanText = '00:00 (Normal)';
+            }
         },
 
         hitung() {
