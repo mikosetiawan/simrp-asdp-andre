@@ -131,21 +131,28 @@
                     </div>
                 </div>
 
-                {{-- Banner Indikator Waktu Sandar & Punishment (>80 Menit) --}}
+                {{-- Notice Alert Waktu Sandar & Punishment (>80 Menit) --}}
                 <div class="p-4 rounded-xl border transition shadow-xs"
-                     :class="isPunishment ? 'bg-rose-50 border-rose-300 text-rose-900' : 'bg-slate-50 border-slate-200 text-slate-700'">
+                     :class="isPunishment ? 'bg-amber-50 border-amber-300 text-amber-900' : 'bg-slate-50 border-slate-200 text-slate-700'">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-                        <div class="space-y-0.5">
+                        <div class="space-y-1">
                             <div class="flex items-center gap-2">
                                 <span class="font-bold">⏱️ Waktu Sandar:</span>
                                 <span class="font-mono font-bold text-sm" x-text="waktuSandarText">-</span>
                             </div>
-                            <div class="text-[11px] text-slate-500">Standar Waktu Sandar Maksimal: <strong>80 Menit (01:20 WIB)</strong></div>
+                            <div class="text-[11px] text-slate-600">
+                                Standar Waktu Sandar Maksimal: <strong>80 Menit (01:20 WIB)</strong>
+                                <template x-if="isPunishment">
+                                    <span class="block text-amber-800 font-medium mt-0.5">
+                                        💡 <em>Notice: Data tetap dapat disimpan secara normal. Peringatan ini hanya berupa notifikasi/informasi kelebihan waktu sandar.</em>
+                                    </span>
+                                </template>
+                            </div>
                         </div>
-                        <div class="w-full sm:w-auto">
-                            <div class="font-bold font-mono text-xs px-3 py-1.5 rounded-lg border text-center flex items-center justify-center gap-1.5"
-                                 :class="isPunishment ? 'text-rose-700 bg-rose-100 border-rose-300' : 'text-emerald-700 bg-emerald-100 border-emerald-300'">
-                                <span x-text="isPunishment ? '⚠️ KELEBIHAN JADWAL & PUNISHMENT:' : '✅ STATUS JADWAL:'"></span>
+                        <div class="w-full sm:w-auto shrink-0">
+                            <div class="font-bold font-mono text-xs px-3 py-2 rounded-lg border text-center flex items-center justify-center gap-1.5"
+                                 :class="isPunishment ? 'text-amber-800 bg-amber-100 border-amber-300' : 'text-emerald-700 bg-emerald-100 border-emerald-300'">
+                                <span x-text="isPunishment ? '🔔 NOTICE PUNISHMENT:' : '✅ STATUS JADWAL:'"></span>
                                 <span x-text="kelebihanText">00:00 (Normal)</span>
                             </div>
                         </div>
