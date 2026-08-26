@@ -80,7 +80,9 @@
     }
 
     $trip = $shift->tripKapal->first();
-    $tarif = $trip?->tagihPelayaran?->tarif;
+    $tarif = $trip?->tagihPelayaran?->tarif 
+        ?? \App\Models\Tarif::aktifPadaTanggal($shift->tanggal->format('Y-m-d'))
+        ?? \App\Models\Tarif::orderBy('id', 'desc')->first();
 
     // Aggregate Penumpang
     $qty_dws = $shift->tripKapal->sum(fn($t) => $t->tagihPelayaran?->jml_pnp_ekb_d ?? 0);
@@ -90,7 +92,7 @@
 
     $rp_dws = $qty_dws * ($tarif->ekb_dewasa ?? 0);
     $rp_lansia = $qty_lansia * ($tarif->ekb_lansia ?? 0);
-    $rp_bayi = $qty_bayi * ($tarif->ekb_anak ?? 0); // Assuming bayi maps to anak tariff or 0
+    $rp_bayi = $qty_bayi * ($tarif->ekb_anak ?? 0);
     $tot_rp_pnp = $rp_dws + $rp_lansia + $rp_bayi;
 
     // Aggregate Kendaraan
@@ -124,31 +126,51 @@
 
     $tot_rp_knd = $rp_g1+$rp_g2+$rp_g3+$rp_g4a+$rp_g4b+$rp_g5a+$rp_g5b+$rp_g6a+$rp_g6b+$rp_g7+$rp_g8+$rp_g9;
 
+    // Fallback stored total revenue if needed
+    $stored_pnp = $shift->tripKapal->sum(fn($t) => $t->tagihPelayaran?->pendapatan_penumpang ?? 0);
+    $stored_knd = $shift->tripKapal->sum(fn($t) => $t->tagihPelayaran?->pendapatan_kendaraan ?? 0);
+    if ($tot_rp_pnp == 0 && $stored_pnp > 0) $tot_rp_pnp = $stored_pnp;
+    if ($tot_rp_knd == 0 && $stored_knd > 0) $tot_rp_knd = $stored_knd;
+
     $jumlah_pendapatan = $tot_rp_pnp + $tot_rp_knd;
-    $jasa_administrasi = 0; // Defaulting to 0 as per instructions "null value dianggap 0"
+    $jasa_administrasi = (int) round($jumlah_pendapatan * 0.10);
     $pendapatan_sebelum_sandar = $jumlah_pendapatan - $jasa_administrasi;
 
     // Jasa Sandar
-    $engker_drgs = \App\Models\Dermaga::all(); // DRG I - VII ideally
+    $engker_drgs = \App\Models\Dermaga::where('aktif', true)->orderBy('kode_dermaga')->get();
     
     $total_engker = $shift->jasaSandar->sum('pendapatan_engker');
     $total_masa_tambat = $shift->jasaSandar->sum('pendapatan_jsn');
     $total_jasa_sandar = $total_engker + $total_masa_tambat;
 
     // Tambahan Biaya
-    $tambat_kepil = 0; // assuming 0 if not tracked
+    $tambat_kepil = 0;
     $cetak_manifest_lembar = 2;
     $cetak_manifest_tarif = 300;
     $cetak_manifest = $cetak_manifest_lembar * $cetak_manifest_tarif;
     $layanan_contact_center = 0;
 
     $subtotal = $total_jasa_sandar + $tambat_kepil + $cetak_manifest;
-    $ppn = $subtotal * 0.11;
+    $ppn = (int) round($subtotal * 0.11);
     $total_bayar = $subtotal + $ppn;
 
     $nama_kapal = $trip ? ($trip->kapal->nama_kapal ?? '-') : '-';
     $jam_b = $trip ? substr($trip->jam_berangkat, 0, 5) : '00:00';
     $nama_dermaga = $trip ? ($trip->dermaga->nama_dermaga ?? '-') : '-';
+
+    // Calculate waktu sandar
+    $waktu_sandar = '-';
+    if ($trip && $trip->jam_tiba && $trip->jam_berangkat) {
+        try {
+            $t1 = \Carbon\Carbon::createFromFormat('H:i:s', strlen($trip->jam_tiba) === 5 ? $trip->jam_tiba.':00' : $trip->jam_tiba);
+            $t2 = \Carbon\Carbon::createFromFormat('H:i:s', strlen($trip->jam_berangkat) === 5 ? $trip->jam_berangkat.':00' : $trip->jam_berangkat);
+            if ($t2->lt($t1)) $t2->addDay();
+            $diffMins = $t1->diffInMinutes($t2);
+            $waktu_sandar = sprintf('%02d:%02d', floor($diffMins / 60), $diffMins % 60);
+        } catch (\Exception $e) {
+            $waktu_sandar = '-';
+        }
+    }
 @endphp
 
 <!-- HEADER -->
@@ -362,7 +384,7 @@
                     <tr>
                         <td>{{ $trip ? substr($trip->jam_tiba, 0, 5) : '-' }}</td>
                         <td>{{ $jam_b }}</td>
-                        <td>-</td>
+                        <td>{{ $waktu_sandar }}</td>
                     </tr>
                 </table>
                 <table class="realisasi-table">
