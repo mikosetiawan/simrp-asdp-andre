@@ -41,19 +41,19 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Shift <span class="text-red-500">*</span></label>
                     <select name="nama_shift" class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
-                        @foreach(['Pagi','Siang','Malam','Full Day'] as $s)
-                        <option value="{{ $s }}" {{ old('nama_shift', $shift->nama_shift) === $s ? 'selected' : '' }}>{{ $s }}</option>
+                        @foreach(['Siang','Malam'] as $s)
+                        <option value="{{ $s }}" {{ old('nama_shift', $shift->nama_shift) === $s ? 'selected' : '' }}>Shift {{ $s }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Jam Mulai <span class="text-red-500">*</span></label>
-                    <input type="time" name="jam_mulai" value="{{ old('jam_mulai', substr($shift->jam_mulai ?? '07:00', 0, 5)) }}"
+                    <input type="time" name="jam_mulai" value="{{ old('jam_mulai', substr($shift->jam_mulai ?? '08:00', 0, 5)) }}"
                         class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Jam Selesai <span class="text-red-500">*</span></label>
-                    <input type="time" name="jam_selesai" value="{{ old('jam_selesai', substr($shift->jam_selesai ?? '15:00', 0, 5)) }}"
+                    <input type="time" name="jam_selesai" value="{{ old('jam_selesai', substr($shift->jam_selesai ?? '20:00', 0, 5)) }}"
                         class="w-full border border-gray-300 rounded-xl px-3 py-2.5 text-sm focus:ring-2 focus:ring-asdp-500">
                 </div>
             </div>
@@ -140,25 +140,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const baseDate = new Date(baseDateVal + 'T00:00:00');
 
-        if (shiftVal === 'Pagi') {
+        if (shiftVal === 'Siang') {
             if (jamMulaiInput) jamMulaiInput.value = '08:00';
             if (jamSelesaiInput) jamSelesaiInput.value = '20:00';
             if (tglAkhirInput) tglAkhirInput.value = baseDateVal;
         } else if (shiftVal === 'Malam') {
             if (jamMulaiInput) jamMulaiInput.value = '20:00';
-            if (jamSelesaiInput) jamSelesaiInput.value = '08:00';
-            const nextDate = new Date(baseDate);
-            nextDate.setDate(nextDate.getDate() + 1);
-            const yyyy = nextDate.getFullYear();
-            const mm = String(nextDate.getMonth() + 1).padStart(2, '0');
-            const dd = String(nextDate.getDate()).padStart(2, '0');
-            if (tglAkhirInput) tglAkhirInput.value = `${yyyy}-${mm}-${dd}`;
-        } else if (shiftVal === 'Siang') {
-            if (jamMulaiInput) jamMulaiInput.value = '15:00';
-            if (jamSelesaiInput) jamSelesaiInput.value = '23:00';
-            if (tglAkhirInput) tglAkhirInput.value = baseDateVal;
-        } else if (shiftVal === 'Full Day') {
-            if (jamMulaiInput) jamMulaiInput.value = '08:00';
             if (jamSelesaiInput) jamSelesaiInput.value = '08:00';
             const nextDate = new Date(baseDate);
             nextDate.setDate(nextDate.getDate() + 1);
